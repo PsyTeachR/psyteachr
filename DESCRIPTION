@@ -1,0 +1,38 @@
+Package: psyteachr
+Title: Datasets for psyTeachR Books
+Version: 0.0.0.9000
+Date: 2021-08-16
+Authors@R: 
+  c(
+    person(
+        given = "Lisa", 
+        family = "DeBruine", 
+        role = c("aut", "cre"), 
+        email = "debruine@gmail.com", 
+        comment = c(ORCID = "0000-0002-7523-5539")
+    ),
+    person(
+        given = "Dale", 
+        family = "Barr", 
+        role = c("aut"), 
+        email = "dale.barr@glasgow.ac.uk", 
+        comment = c(ORCID = "0000-0002-1121-4608")
+    ),
+    person(given = "Helena",
+           family = "Paterson",
+           role = c("ctb"),
+           email = "Helena.Paterson@glasgow.ac.uk",
+           comment = c(ORCID = "0000-0001-7715-5973")),
+    person(given = "Phil",
+           family = "McAleer",
+           role = c("ctb"),
+           email = "Philip.McAleer@glasgow.ac.uk",
+           comment = c(ORCID = "0000-0002-4523-2097")))
+Description: This package provides datasets and functions for psyTeachR books.
+License: CC BY 4.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
