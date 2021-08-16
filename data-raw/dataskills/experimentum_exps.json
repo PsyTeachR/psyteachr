@@ -1,10 +1,10 @@
 {
     "@context": "https://schema.org/",
     "@type": "Dataset",
-    "name": "Experimentum Project Questionnaires",
+    "name": "Experimentum Project Experiment",
     "schemaVersion": "Psych-DS 0.1.0",
     "author": "Lisa DeBruine",
-    "description": "Data from a demo questionnaire on Experimentum <https://debruine.github.io/experimentum/>. Subjects are asked questions about dogs to test the different questionnaire response types.  Questions   * current: \tDo you own a dog? (yes/no)   * past: Have you ever owned a dog? (yes/no)   * name: What is the best name for a dog? (free short text)   * good: How good are dogs? (1=pretty good:7=very good)   * country: What country do borzois come from?   * good_borzoi: How good are borzois? (0=pretty good:100=very good)   * text: Write some text about dogs. (free long text)   * time: What time is it? (time)",
+    "description": "Data from a demo experiment on Experimentum <https://debruine.github.io/experimentum/>. Subjects are shown pairs of upright and inverted Mooney faces and asked to click on the upright face.",
     "license": "CC-BY 4.0",
     "variableMeasured": [
         {
@@ -21,8 +21,8 @@
         },
         {
             "@type": "PropertyValue",
-            "name": "quest_id",
-            "description": "The unique ID for the questionnaire",
+            "name": "exp_id",
+            "description": "The unique ID for the experiment",
             "dataType": "int"
         },
         {
@@ -35,13 +35,27 @@
             "@type": "PropertyValue",
             "name": "user_sex",
             "description": "The user's sex/gender (male, female, nonbinary, na)",
-            "dataType": "string"
+            "dataType": "string",
+            "levels": {
+                "male": "male",
+                "female": "female",
+                "nonbinary": "nonbinary"
+            },
+            "levelsOrdered": false
         },
         {
             "@type": "PropertyValue",
             "name": "user_status",
             "description": "The user's status (test, guest, registered, student,res, super, admin)",
-            "dataType": "string"
+            "dataType": "string",
+            "levels": {
+                "student": "student",
+                "guest": "guest",
+                "registered": "registered",
+                "super": "super",
+                "test": "test"
+            },
+            "levelsOrdered": false
         },
         {
             "@type": "PropertyValue",
@@ -51,14 +65,14 @@
         },
         {
             "@type": "PropertyValue",
-            "name": "q_name",
-            "description": "The name of the question",
+            "name": "trial_name",
+            "description": "The name of the trial",
             "dataType": "string"
         },
         {
             "@type": "PropertyValue",
-            "name": "q_id",
-            "description": "The unique ID of the question in the questionnaire",
+            "name": "trial_n",
+            "description": "The unique number of the trial in the experiment",
             "dataType": "int"
         },
         {
@@ -75,14 +89,20 @@
         },
         {
             "@type": "PropertyValue",
-            "name": "starttime",
-            "description": "The timestamp of the questionnaire start",
-            "dataType": "double"
+            "name": "rt",
+            "description": "The reaction time in ms",
+            "dataType": "int"
         },
         {
             "@type": "PropertyValue",
-            "name": "endtime",
-            "description": "The timestamp of the questionnaire submission",
+            "name": "side",
+            "description": "The side of presentation (for multi-stimulus trials)",
+            "dataType": "string"
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "dt",
+            "description": "The timestamp of the trial response",
             "dataType": "double"
         }
     ]

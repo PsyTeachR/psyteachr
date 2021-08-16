@@ -1,4 +1,4 @@
 library(testthat)
-library(dataskills)
+library(psyteachr)
 
-test_check("dataskills")
+test_check("psyteachr")

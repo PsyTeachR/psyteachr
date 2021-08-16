@@ -1,0 +1,49 @@
+url: https://psyteachr.github.io/psyteachr
+
+home:
+  title: psyteachr
+  description: Datasets for psyTeachR Books.
+  strip_header: false
+
+template:
+  opengraph:
+    image:
+      src: man/figures/psyteachr.png
+      alt: "Hexagon with psyTeachR"
+    twitter:
+      creator: "@psyteachr"
+      site: "@psyteachr"
+      card: summary_large_image
+
+reference:
+- title: Functions
+  desc: ~
+  contents:
+  - '`getdata`'
+- title: Dataskills
+  desc: ~
+  contents:
+  - '`country_codes`'
+  - '`disgust_cors`'
+  - '`disgust_scores`'
+  - '`disgust`'
+  - '`EMBU_mother`'
+  - '`eq_data`'
+  - '`experimentum_exps`'
+  - '`experimentum_quests`'
+  - '`eye_descriptions`'
+  - '`family_composition`'
+  - '`infmort`'
+  - '`matmort`'
+  - '`mess`'
+  - '`personality_scores`'
+  - '`personality`'
+  - '`pets`'
+  - '`psa001_agg`'
+  - '`psa001_cfd_faces`'
+  - '`sensation_seeking`'
+  - '`smalldata`'
+  - '`sq_data`'
+  - '`stroop`'
+  - '`users`'
+  - '`users2`'

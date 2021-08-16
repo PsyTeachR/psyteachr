@@ -1,17 +1,18 @@
-## code to prepare `DATASET` dataset goes here
+# data for dataskills ----
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(faux)
+library(readr)
 faux::faux_options(verbose = FALSE)
 set.seed(8675309)
 
-setwd(rstudioapi::getActiveProject())
 
 # function for creating dataset descriptions in Roxygen
 make_dataset <- function(dataname, title, desc, vardesc = list(), filetype = "csv", source = NULL, write = TRUE, ct = readr::cols()) {
 
   # read data and save to data directory
-  datafile <- paste0("data-raw/", dataname, ".", filetype)
+  datafile <- paste0("data-raw/dataskills/", dataname, ".", filetype)
   if (filetype == "csv") {
     data <- readr::read_csv(datafile, col_types = ct)
   } else if (filetype == "xls") {
@@ -32,7 +33,7 @@ make_dataset <- function(dataname, title, desc, vardesc = list(), filetype = "cs
                        author = "Lisa DeBruine",
                        name = title, description = gsub("\n", " ", desc),
                        license = "CC-BY 4.0")
-  readr::write_file(cb, paste0("data-raw/", dataname, ".json"))
+  readr::write_file(cb, paste0("data-raw/dataskills/", dataname, ".json"))
 
   # create Roxygen description
   itemdesc <- vardesc$description
@@ -52,7 +53,7 @@ make_dataset <- function(dataname, title, desc, vardesc = list(), filetype = "cs
 }
 
 
-# smalldata ----
+## smalldata ----
 time <- list(time = c(pre = "Pre-intervention score",
                       post = "Post-intervention score"))
 group <- list(group = c(control = "Control group",
@@ -64,7 +65,7 @@ data <- faux::sim_design(within = time,
                          mu = c(100, 100, 100, 110),
                          sd = 20, r = 0.5,
                          dv = "score")
-readr::write_csv(data, "data-raw/smalldata.csv")
+readr::write_csv(data, "data-raw/dataskills/smalldata.csv")
 vardesc <- list(
   description = list(
     id = "Subject ID",
@@ -74,11 +75,11 @@ vardesc <- list(
   )
 )
 make_dataset("smalldata", "Small Factorial Design: 2w*2b",
-             "Small simulated dataset (n = 5) with one within-subject factor (time) having 2 levels (pre and post) and one beteen-subject factor (group) having two levels(control and experimental). The dataset is in wide format and created with faux.", vardesc)
+             "Small simulated dataset (n = 5) with one within-subject factor (time) having 2 levels (pre and post) and one beteen-subject factor (group) having two levels (control and experimental). The dataset is in wide format and created with faux.", vardesc)
 
-# country_codes ----
+## country_codes ----
 ccodes <- read_csv("https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
-write_csv(ccodes, "data-raw/country_codes.csv")
+readr::write_csv(ccodes, "data-raw/dataskills/country_codes.csv")
 
 vardesc <- list(
   description = list(
@@ -100,7 +101,7 @@ make_dataset("country_codes",
              "Country Codes",
              "Multiple country, subregion, and region codes for 249 countries.\nFrom https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes", vardesc, source = "https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
 
-# disgust ----
+## disgust ----
 vardesc <- list(
   description = list(
     id = "Each questionnaire completion's unique ID",
@@ -135,7 +136,7 @@ make_dataset("disgust",
              "A dataset containing responses to the 21 items in the Three Domain Disgust Questionnaire (Tybur et al.)", vardesc)
 
 
-# disgust_cors ----
+## disgust_cors ----
 vardesc <- list(
   description = list(
     V1 = "The first correalted item",
@@ -148,7 +149,7 @@ make_dataset("disgust_cors",
              "Three Domain Disgust Questionnaire (correlations)",
              "Correlations among questions on the Three Domain Disgust Questionnaire (Tybur et al.)", vardesc)
 
-# disgust_scores ----
+## disgust_scores ----
 vardesc <- list(
   description = list(
     id = "Each questionnaire completion's unique ID",
@@ -165,7 +166,7 @@ make_dataset("disgust_scores", "Three Domain Disgust Questionnaire (scores)",
              "A dataset containing subscale scores for to the Three Domain Disgust Questionnaire (Tybur et al.), calculated from [disgust].", vardesc)
 
 
-# EMBU_mother ----
+## EMBU_mother ----
 vardesc <- list(
   description = list(
     id = "A unique ID for each questionnaire completion",
@@ -197,7 +198,7 @@ vardesc <- list(
 make_dataset("EMBU_mother", "Parental Attachment (Mothers)",
              "Items starting with r, p and e are for the rejection (r), overprotection (p), and emotional warmth (e) subscales.\nArrindell et al. (1999). The development of a short form of the EMBU: Its appraisal with students in Greece, Guatemala, Hungary and Italy. Personality and Individual Differences, 27, 613-628.", vardesc)
 
-# empathizing ----
+## empathizing ----
 vardesc <- list(
   description = list(
     user_id = "Each participant's unique ID",
@@ -231,7 +232,7 @@ vardesc <- list(
   )
 )
 
-d <- read_csv("data-raw/empathizing.csv") %>%
+d <- read_csv("data-raw/dataskills/empathizing.csv") %>%
   gather(q, score, q2663:q2684) %>%
   mutate(label = recode(score,
                         "1" = "strongly agree",
@@ -251,12 +252,12 @@ unique(d$qname)
 data <- select(d, -q, -score, -rev) %>%
   spread(qname, label)
 
-write_csv(data, "data-raw/eq_data.csv")
+write_csv(data, "data-raw/dataskills/eq_data.csv")
 
 make_dataset("eq_data", "Empathizing Quotient",
              "Reverse coded (Q#R) questions coded and strongly disagree = 2, slightly disagree = 1, else = 0. The other questions are coded as strongly agree = 2, slightly agree = 1, else = 0.\nWakabayashi, A., Baron-Cohen, S., Wheelwright, S., Goldenfeld, N., Delaney, J., Fine, D., Smith, R., & Weil, L. (2006). Development of short forms of the Empathy Quotient (EQ-Short) and the Systemizing Quotient (SQ-Short). Personality and Individual Differences, 41(5), 929–940. https://doi.org/10.1016/j.paid.2006.03.017", vardesc)
 
-# family ----
+## family ----
 
 vardesc <- list(
   description = list(
@@ -279,7 +280,7 @@ make_dataset("family_composition", "Family Composition",
              vardesc)
 
 
-# eye_descriptions ----
+## eye_descriptions ----
 vardesc <- list(
   description = list(
     user_id = "Each participant's unique ID",
@@ -294,12 +295,12 @@ vardesc$description <- c(vardesc$description, tt)
 make_dataset("eye_descriptions", "Descriptions of Eyes",
              "Participant's written descriptions of the eyes of 50 people", vardesc)
 
-# infmort ----
+## infmort ----
 vardesc <- list(
   description = list(
     Country = "The full country name",
     Year = "The year the statistic was calculated for (yyyy)",
-    "Infant mortality rate (probability of dying between birth and age 1 per 1000 live births)" = "Infant mortality rate (the probability of dying between birth and age 1 per 1000 live births) and confidence interval in the format \"rate \[lowCI-highCI\]\""
+    "Infant mortality rate (probability of dying between birth and age 1 per 1000 live births)" = "Infant mortality rate (the probability of dying between birth and age 1 per 1000 live births) and confidence interval in the format \"rate \\[lowCI-highCI\\]\""
   )
 )
 
@@ -307,13 +308,13 @@ make_dataset("infmort", "Infant Mortality",
              "Infant mortality by country and year from the World Health Organisation.", vardesc, source = "https://apps.who.int/gho/data/view.main.182?lang=en")
 
 
-# matmort ----
+## matmort ----
 vardesc <- list(
   description = list(
     Country = "The full country name",
-    "1990" = "Maternal mortality for 1990 (format: \"rate \[lowCI-highCI\])",
-    "2000" = "Maternal mortality for 2000 (format: \"rate \[lowCI-highCI\]\")",
-    "2015" = "Maternal mortality for 2015 (format: \"rate \[lowCI-highCI\]\")"
+    "1990" = "Maternal mortality for 1990 (format: \"rate \\[lowCI-highCI\\]\")",
+    "2000" = "Maternal mortality for 2000 (format: \"rate \\[lowCI-highCI\\]\")",
+    "2015" = "Maternal mortality for 2015 (format: \"rate \\[lowCI-highCI\\]\")"
   )
 )
 
@@ -321,7 +322,7 @@ make_dataset("matmort", "Maternal Mortality",
              "Maternal mortality by country and year from the World Health Organisation.", vardesc, filetype = "xls", source = "https://apps.who.int/gho/data/node.main.15?lang=en")
 
 
-# sensation_seeking ----
+## sensation_seeking ----
 
 vardesc <- list(
   description = list(
@@ -347,7 +348,7 @@ vardesc <- list(
 
 make_dataset("sensation_seeking", "Sensation Seeking Scale", "Zuckerman M. (1984). Sensation seeking: a comparative approach to a human trait. Behavioral and Brain Sciences. 7: 413-471.", vardesc)
 
-# stroop ----
+## stroop ----
 set.seed(8675309)
 cc <- c("blue", "purple", "green", "red", "brown")
 sub <- faux::sim_design(id = "sub_id", dv = "sub_i",
@@ -370,7 +371,7 @@ stroop <- faux::sim_design(
   select(sub_id, word, ink, response, rt) %>%
   arrange(sub_id)
 
-readr::write_csv(stroop, "data-raw/stroop.csv")
+readr::write_csv(stroop, "data-raw/dataskills/stroop.csv")
 
 vardesc <- list(
   description = list(
@@ -384,7 +385,7 @@ vardesc <- list(
 
 make_dataset("stroop", "Stroop Task", "50 simulated subject in a stroop task viewing all combinations of word and ink colours blue, purple, green, red, and brown, 5 times each. Subjects respond with the ink colour. Subjects who do not respond in time have NA for response and rt.", vardesc)
 
-# systemising ----
+## systemising ----
 vardesc <- list(
   description = list(
     user_id = "Each participant's unique ID",
@@ -421,7 +422,7 @@ vardesc <- list(
   )
 )
 
-d <- read_csv("data-raw/systemizing.csv") %>%
+d <- read_csv("data-raw/dataskills/systemizing.csv") %>%
   gather(q, score, q2616:q2640) %>%
   mutate(label = recode(score,
                         "1" = "strongly agree",
@@ -441,12 +442,12 @@ unique(d$qname)
 data <- select(d, -q, -score, -rev) %>%
   spread(qname, label)
 
-write_csv(data, "data-raw/sq_data.csv")
+write_csv(data, "data-raw/dataskills/sq_data.csv")
 
 make_dataset("sq_data", "Systemizing Quotient",
              "Reverse coded (Q#R) questions coded as strongly disagree = 2, slightly disagree = 1, else = 0. The other questions are coded as strongly agree = 2, slightly agree = 1, else = 0.\nWakabayashi, A., Baron-Cohen, S., Wheelwright, S., Goldenfeld, N., Delaney, J., Fine, D., Smith, R., & Weil, L. (2006). Development of short forms of the Empathy Quotient (EQ-Short) and the Systemizing Quotient (SQ-Short). Personality and Individual Differences, 41(5), 929–940. https://doi.org/10.1016/j.paid.2006.03.017", vardesc)
 
-# personality ----
+## personality ----
 
 vardesc <- list(
   description = list(
@@ -498,7 +499,7 @@ vardesc <- list(
 
 make_dataset("personality", "5-Factor Personality Items", "Archival data from the Face Research Lab of a 5-factor personality questionnaire. Each question is labelled with the domain (Op = openness, Co = conscientiousness, Ex = extroversion, Ag = agreeableness, and Ne = neuroticism) and the question number. Participants rate each statement on a Likert scale from 0 (Never) to 6 (Always). Questions with REV have already been reverse-coded (0 = Always, 6 = Never). \n\nInstructions: A number of statements which people have used to describe themselves are given below. Read each statement and then click on of the seven options to indicate how frequently this statement applies to you. There are no right or wrong answers. Do not spend too much time on any one statement, but give the answer which seems to describe how you generally feel or behave.", vardesc)
 
-# personality_scores ----
+## personality_scores ----
 
 vardesc <- list(
   description = list(
@@ -514,7 +515,7 @@ vardesc <- list(
 
 make_dataset("personality_scores", "5-Factor Personality Scores", "Archival data from the Face Research Lab of a 5-factor personality questionnaire, with factor score calculated from [personality].", vardesc)
 
-# pets ----
+## pets ----
 set.seed(8675309)
 dog_r <- c(.25, .25, .5)
 cat_r <- c(-.25, -.25, .5)
@@ -536,7 +537,7 @@ pets <- faux::sim_design(
          age = faux::norm2trunc(age, 0, mu = 7, sd = 3),
          age = round(age))
 
-write_csv(pets, "data-raw/pets.csv")
+write_csv(pets, "data-raw/dataskills/pets.csv")
 
 vardesc <- list(
   description = list(
@@ -552,7 +553,53 @@ vardesc <- list(
 make_dataset("pets", "Pets",
              "A simulated dataset with one random factor (id), two categorical factors (pet, country) and three continuous variables (score, age, weight). This dataset is useful for practicing plotting.", vardesc, ct = "cffiid")
 
-# psa001_agg ----
+## experimentum_exps ----
+
+vardesc <- list(
+  description = list(
+    session_id = "The unique session ID assigned each time a user starts a project",
+    project_id = "The unique ID for the project (a collection of questionnaires and/or experiments",
+    exp_id = "The unique ID for the experiment",
+    user_id = "The unique ID for the user (subject/participant)",
+    user_sex = "The user's sex/gender (male, female, nonbinary, na)",
+    user_status = "The user's status (test, guest, registered, student,res, super, admin)",
+    user_age = "The user's age in years; calculated from birthdate",
+    trial_name = "The name of the trial",
+    trial_n = "The unique number of the trial in the experiment",
+    order = "The order the trial was shown in (for experiments with randomised order)",
+    dv = "The response",
+    rt = "The reaction time in ms",
+    side = "The side of presentation (for multi-stimulus trials)",
+    dt = "The timestamp of the trial response"
+  )
+)
+
+make_dataset("experimentum_exps", "Experimentum Project Experiment",
+             "Data from a demo experiment on Experimentum <https://debruine.github.io/experimentum/>. Subjects are shown pairs of upright and inverted Mooney faces and asked to click on the upright face.", vardesc, ct = "iiiiffdciicicT")
+
+## experimentum_quests ----
+vardesc <- list(
+  description = list(
+    session_id = "The unique session ID assigned each time a user starts a project",
+    project_id = "The unique ID for the project (a collection of questionnaires and/or experiments",
+    quest_id = "The unique ID for the questionnaire",
+    user_id = "The unique ID for the user (subject/participant)",
+    user_sex = "The user's sex/gender (male, female, nonbinary, na)",
+    user_status = "The user's status (test, guest, registered, student,res, super, admin)",
+    user_age = "The user's age in years; calculated from birthdate",
+    q_name = "The name of the question",
+    q_id = "The unique ID of the question in the questionnaire",
+    order = "The order the trial was shown in (for questionnaires with randomised order)",
+    dv = "The response",
+    starttime = "The timestamp of the questionnaire start",
+    endtime = "The timestamp of the questionnaire submission"
+  )
+)
+
+make_dataset("experimentum_quests", "Experimentum Project Questionnaires",
+             "Data from a demo questionnaire on Experimentum <https://debruine.github.io/experimentum/>. Subjects are asked questions about dogs to test the different questionnaire response types.  Questions   * current: \tDo you own a dog? (yes/no)   * past: Have you ever owned a dog? (yes/no)   * name: What is the best name for a dog? (free short text)   * good: How good are dogs? (1=pretty good:7=very good)   * country: What country do borzois come from?   * good_borzoi: How good are borzois? (0=pretty good:100=very good)   * text: Write some text about dogs. (free long text)   * time: What time is it? (time)", vardesc, ct = "iiiiffdccicTT")
+
+## psa001_agg ----
 
 vardesc <- list(
   description = list(
@@ -578,9 +625,9 @@ make_dataset("psa001_agg", "First Impressions of Faces (Aggregated)",
              "Aggregated data from Psychological Science Accelerator project: To Which World Regions Does the Valence-Dominance Model of Social Perception Apply? <https://psyarxiv.com/n26dy>. Mean ratings on 13 traits for each of 120 faces shown in 10 world regions. Face characteristics at [psa001_cfd_faces]. \n\n Full data and analysis scripts at <https://osf.io/jfwtr/>", vardesc,
              source = "https://osf.io/jkt29/")
 
-# psa001_cfd_faces ----
+## psa001_cfd_faces ----
 
-psa_faces <- read_csv("data-raw/psa001_cfd_faces.csv")
+psa_faces <- read_csv("data-raw/dataskills/psa001_cfd_faces.csv")
 
 vardesc <- list(
   description = list(
@@ -598,7 +645,7 @@ make_dataset("psa001_cfd_faces", "Face Characteristics",
 
 
 
-# mess ----
+## mess ----
 set.seed(8675309)
 mess <- data.frame(
   junk = "junk",
@@ -618,9 +665,9 @@ mess <- data.frame(
          ) %>%
   select(everything())
 
-messtxt <- format_csv(mess) %>%
+messtxt <- readr::format_csv(mess) %>%
   gsub("NA,NA,NA,NA,NA,NA,NA", "", ., fixed = TRUE)
-write(messtxt, "data-raw/mess.csv")
+write(messtxt, "data-raw/dataskills/mess.csv")
 
 vardesc <- list(
   description = list(
@@ -638,9 +685,9 @@ make_dataset("mess", "Messy Data",
              "A dataset with missing values, blank rows, incorrect data types, multiple values in one column, and multiple date types for practicing data import.", vardesc)
 
 ## add bad header rows
-write(paste0("This is my messy dataset\n\n", messtxt), "data-raw/mess.csv")
+write(paste0("This is my messy dataset\n\n", messtxt), "data-raw/dataskills/mess.csv")
 
-# users ----
+## users ----
 
 vardesc <- list(
   description = list(
@@ -653,7 +700,7 @@ vardesc <- list(
 make_dataset("users", "User Demographics",
              "A dataset with unique participant ID, sex and birth year. To be used in conjunction with data from [disgust], [disgust_scores], [personality], [personality_scores], and [users2].", vardesc)
 
-# users2 ----
+## users2 ----
 
 vardesc <- list(
   description = list(
@@ -666,32 +713,16 @@ vardesc <- list(
 make_dataset("users2", "User Demographics 2",
              "A dataset with unique participant ID, birth year, and sex. To be used in conjunction with data from [disgust], [disgust_scores], [personality], [personality_scores], and [users].", vardesc)
 
-## update documentation -----
+# update documentation -----
 devtools::document()
 
 ## copy raw data to book data dir ----
-unlink("book/data", recursive = TRUE)
-file.copy(
-  from = "data-raw",
-  to = "book",
-  overwrite = TRUE,
-  recursive = TRUE)
-file.rename("book/data-raw", "book/data")
-unlink("book/data/_DATASET.R")
+f <- list.files("data-raw/dataskills", full.names = TRUE)
+copied <- sapply(f, file.copy,
+        to = "docs/data/",
+        overwrite = TRUE)
 
-unlink("book/exercises/data", recursive = TRUE)
-file.copy(
-  from = "book/data",
-  to = "book/exercises/",
-  overwrite = TRUE,
-  recursive = TRUE)
-
-# make zip file ----
-setwd(rstudioapi::getActiveProject())
-setwd("book")
-f <- list.files("data", full.names = TRUE)
-zipfile <- "data/data.zip"
-unlink(zipfile)
-zip(zipfile, f)
-
+## make zip file ----
+f <- list.files(path = "data-raw/dataskills", pattern = "[^zip]$", full.names = TRUE)
+utils::zip("inst/datasets/dataskills.zip", f, flags = "-j")
 
